@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>Alien</title>
+		<style>
+			body {
+				background: #000;
+				overflow: hidden;
+			}
+
+			#wrap {
+				background: #050505;
+				bottom: 0;
+				display: block;
+				left: 0;
+				margin: auto;
+				opacity: 0;
+				position: absolute;
+				right: 0;
+				top: 0;
+				transition: 
+					opacity 1000ms, 
+					width 500ms, 
+					height 500ms
+				;
+			}
+
+			.loaded #wrap {
+				opacity: 1;
+			}
+
+			canvas {
+				display: block;
+				height: 100%;
+				left: 0;
+				position: absolute;
+				top: 0;
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<canvas id="cbg">Your browser does not support canvas. To play the game, download the latest version of a browser that supports canvas, such as <a href="https://google.com/chrome" target="_blank">Google Chrome</a> or <a href="http://mozilla.org/firefox" target="_blank">Mozilla Firefox</a>.</canvas>
+			<canvas id="cmg"></canvas>
+			<canvas id="cfg"></canvas>
+		</div>	
+		<!--<script src="main.min.js"></script>-->
+		<script src="js/util.js"></script>
+		<script src="js/audio.js"></script>
+		<script src="js/moon.js"></script>
+		<script src="js/alien.js"></script>
+		<script src="js/game.js"></script>
+		<script>
+			window.onload = function() {
+				document.documentElement.className += ' loaded';
+				var game = new Game();
+				game.init();				
+			}
+		</script>
+	</body>
+</html>
