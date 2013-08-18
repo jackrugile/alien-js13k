@@ -37,7 +37,7 @@ function fillCircle( ctx, x, y, radius, fillStyle ) {
 
 function strokeCircle( ctx, x, y, radius, strokeStyle, lineWidth ) {
 	var strokeStyle = strokeStyle ? strokeStyle :  '#000',
-			lineWidth = lineWidth ? lineWidth : 1;
+		lineWidth = lineWidth ? lineWidth : 1;
 	circle( ctx, x, y, radius );
 	ctx.lineWidth = lineWidth;
 	ctx.strokeStyle = strokeStyle;

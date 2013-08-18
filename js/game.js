@@ -21,6 +21,7 @@ $.init = function() {
 	$.gravity = 0.3;
 	$.dt = 1;
 	$.lt = 0;
+	$.tick = 0;
 	$.state = 'play';
 	$.states = {};
 
@@ -123,8 +124,7 @@ $.resize = function() {
 
 $.mousedown = function( e ) {
 	e.preventDefault();
-	$.alien.vx += Math.cos( $.alien.angle ) * 8;
-	$.alien.vy += Math.sin( $.alien.angle ) * 8;
+	$.alien.jump();	
 };
 
 $.bindEvents = function() {
@@ -142,11 +142,12 @@ $.updateDelta = function() {
 	$.dt = ( $.dt < 0 ) ? 0.001 : $.dt;
 	$.dt = ( $.dt > 4 ) ? 4 : $.dt;
 	$.lt = now;
+	//$.dt = 1;
 };
 
 $.updateScale = function() { 
-	$.scale += ( ( ( 1 - $.alien.distFromGround / 1500 ) - $.scale ) / 20 ) * $.dt ;
-	$.scale = Math.min( Math.max( 0.04, $.scale ), 1.2 );
+	$.scale += ( ( ( 1 - $.alien.distFromGround / 1500 ) - $.scale ) / 15 ) * $.dt ;
+	$.scale = Math.min( Math.max( 0.01, $.scale ), 1.2 );
 };
 
 $.updateScreen = function() { 
@@ -174,7 +175,7 @@ $.setupStates = function() {
 		$.ctxmg.translate( 0, 0 );
 		$.ctxmg.scale( $.scale, $.scale );
 		$.ctxmg.translate( $.screen.x / $.scale, $.screen.y / $.scale );
-		
+
 		$.moon.update( $ );
 		$.alien.update( $ );
 		$.moon.render( $ );
@@ -193,8 +194,11 @@ $.setupStates = function() {
 Loop
 ==============================================================================*/
 $.loop = function() {
+	stats.begin();
 	requestAnimFrame( $.loop );
-	$.states[ $.state ]();	
+	$.states[ $.state ]();
+	$.tick++;
+	stats.end();
 };
 
 }

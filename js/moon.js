@@ -11,10 +11,6 @@ function Moon( game ) {
 	this.fillStyle = '#eee';
 	this.strokeStyle = 'hsla(0, 0%, 100%, 0.05)';
 
-	//this.cache = document.createElement( 'canvas' );
-	//this.ctx = this.cache.getContext( '2d' );
-	//this.cache.width = this.cache.height = this.radius * 2;
-
 	this.craters = [];
 	var i = 150;
 	while( i ) {
@@ -43,54 +39,6 @@ function Moon( game ) {
 			i--;
 		}
 	}
-
-	/*==============================================================================
-	Main Circle
-	==============================================================================*/
-	//fillCircle( this.ctx, this.radius, this.radius, this.radius, this.fillStyle );
-
-	/*==============================================================================
-	Rotation
-	==============================================================================*/
-	//this.ctx.save();
-	//this.ctx.translate( this.radius, this.radius );
-	//this.ctx.rotate( this.rotation );
-
-	/*==============================================================================
-	Craters
-	==============================================================================*/
-	/*var i = this.craters.length;
-	while( i-- ) {
-		crater = this.craters[ i ];
-
-		this.ctx.save();
-		this.ctx.translate( crater.x - Math.cos( crater.angle ) * ( crater.radius * 0.05 ), crater.y - Math.sin( crater.angle ) * ( crater.radius * 0.05 ) );
-		this.ctx.rotate( crater.angle - Math.PI / 2 );
-		this.ctx.scale( 1, 1 - ( crater.dist / this.radius ) * 0.9 );	
-		fillCircle( this.ctx, 0, 0, crater.radius * 1.1, '#ccc' );
-		this.ctx.restore();
-
-		this.ctx.save();
-		this.ctx.translate( crater.x, crater.y );
-		this.ctx.rotate( crater.angle - Math.PI / 2 );
-		this.ctx.scale( 1, 1 - ( crater.dist / this.radius ) * 0.9 );	
-		fillCircle( this.ctx, 0, 0, crater.radius * 1.05, '#fff' );
-		this.ctx.restore();
-
-		this.ctx.save();
-		this.ctx.translate( crater.x, crater.y );
-		this.ctx.rotate( crater.angle - Math.PI / 2 );
-		this.ctx.scale( 1, 1 - ( crater.dist / this.radius ) * 0.9 );	
-		fillCircle( this.ctx, 0, 0, crater.radius, '#ddd' );
-		this.ctx.restore();		
-	}*/
-
-	/*==============================================================================
-	Restore
-	==============================================================================*/
-	//this.ctx.restore();
-
-	//game.wrap.appendChild( this.cache);
 }
 
 /*==============================================================================
@@ -104,12 +52,6 @@ Moon.prototype.update = function( game ) {
 Render
 ==============================================================================*/
 Moon.prototype.render = function( game ) {
-	/*game.ctxmg.save();
-	game.ctxmg.translate( 0, 0 );
-	game.ctxmg.rotate( this.rotation );
-	game.ctxmg.drawImage( this.cache, 0, 0, this.radius * 2, this.radius * 2, -this.radius, -this.radius, this.radius * 2, this.radius * 2 );
-	game.ctxmg.restore();*/
-
 	/*==============================================================================
 	Atmosphere
 	==============================================================================*/
@@ -157,7 +99,7 @@ Moon.prototype.render = function( game ) {
 		game.ctxmg.rotate( crater.angle - Math.PI / 2 );
 		game.ctxmg.scale( 1, 1 - ( crater.dist / this.radius ) * 0.9 );	
 		fillCircle( game.ctxmg, 0, 0, crater.radius, '#ddd' );
-		game.ctxmg.restore();		
+		game.ctxmg.restore();
 	}
 
 	/*==============================================================================
