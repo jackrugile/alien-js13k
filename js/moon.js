@@ -1,12 +1,13 @@
 /*==============================================================================
 Init
 ==============================================================================*/
-function Moon( game ) {	
+function Moon( $ ) {	
 	this.x = 0;
 	this.y = 0;
 	this.radius = 2500;
 	this.atmosphere = 800;
 	this.rotation = 0;
+	this.rotationSpeed = 0.003;
 	this.lineWidth = 50;
 	this.fillStyle = '#eee';
 	this.strokeStyle = 'hsla(0, 0%, 100%, 0.05)';
@@ -18,7 +19,7 @@ function Moon( game ) {
 		crater.radius = rand( 20, 120 );
 		crater.angle = rand( 0, Math.PI * 2 );
 		crater.dist = this.radius - rand( 0, this.radius * 1 );
-		crater.x = Math.cos( crater.angle ) * ( crater.dist ),
+		crater.x = Math.cos( crater.angle ) * ( crater.dist );
 		crater.y = Math.sin( crater.angle ) * ( crater.dist );
 
 		var j = this.craters.length,
@@ -44,34 +45,34 @@ function Moon( game ) {
 /*==============================================================================
 Update
 ==============================================================================*/
-Moon.prototype.update = function( game ) {
-	this.rotation -= 0.003 * game.dt;
+Moon.prototype.update = function( $ ) {
+	this.rotation -= this.rotationSpeed  * $.dt;
 };
 
 /*==============================================================================
 Render
 ==============================================================================*/
-Moon.prototype.render = function( game ) {
+Moon.prototype.render = function( $ ) {
 	/*==============================================================================
 	Atmosphere
 	==============================================================================*/
-	var gradient = game.ctxmg.createRadialGradient( 0, 0, 0, 0, 0, this.radius + this.atmosphere );
+	var gradient = $.ctxmg.createRadialGradient( 0, 0, 0, 0, 0, this.radius + this.atmosphere );
 	gradient.addColorStop( 0.85, 'hsla(0, 0%, 100%, 0)' );
 	gradient.addColorStop( 1, 'hsla(0, 0%, 100%, 0.1)' );
-	fillCircle( game.ctxmg, this.x, this.y, this.radius + this.atmosphere, gradient );
-	strokeCircle( game.ctxmg, this.x, this.y, this.radius + this.atmosphere + 5, 'hsla(0, 0%, 100%, 0.2)', 10 );
+	fillCircle( $.ctxmg, this.x, this.y, this.radius + this.atmosphere, gradient );
+	strokeCircle( $.ctxmg, this.x, this.y, this.radius + this.atmosphere + 5, 'hsla(0, 0%, 100%, 0.2)', 10 );
 
 	/*==============================================================================
 	Main Circle
 	==============================================================================*/
-	fillCircle( game.ctxmg, this.x, this.y, this.radius, this.fillStyle );
+	fillCircle( $.ctxmg, this.x, this.y, this.radius, this.fillStyle );
 
 	/*==============================================================================
 	Rotation
 	==============================================================================*/
-	game.ctxmg.save();
-	game.ctxmg.translate( 0, 0 );
-	game.ctxmg.rotate( this.rotation );
+	$.ctxmg.save();
+	$.ctxmg.translate( 0, 0 );
+	$.ctxmg.rotate( this.rotation );
 
 	/*==============================================================================
 	Craters
@@ -80,31 +81,31 @@ Moon.prototype.render = function( game ) {
 	while( i-- ) {
 		crater = this.craters[ i ];
 
-		game.ctxmg.save();
-		game.ctxmg.translate( crater.x - Math.cos( crater.angle ) * ( crater.radius * 0.05 ), crater.y - Math.sin( crater.angle ) * ( crater.radius * 0.05 ) );
-		game.ctxmg.rotate( crater.angle - Math.PI / 2 );
-		game.ctxmg.scale( 1, 1 - ( crater.dist / this.radius ) * 0.9 );	
-		fillCircle( game.ctxmg, 0, 0, crater.radius * 1.1, '#ccc' );
-		game.ctxmg.restore();
+		$.ctxmg.save();
+		$.ctxmg.translate( crater.x - Math.cos( crater.angle ) * ( crater.radius * 0.05 ), crater.y - Math.sin( crater.angle ) * ( crater.radius * 0.05 ) );
+		$.ctxmg.rotate( crater.angle - Math.PI / 2 );
+		$.ctxmg.scale( 1, 1 - ( crater.dist / this.radius ) * 0.9 );	
+		fillCircle( $.ctxmg, 0, 0, crater.radius * 1.1, '#ccc' );
+		$.ctxmg.restore();
 
-		game.ctxmg.save();
-		game.ctxmg.translate( crater.x, crater.y );
-		game.ctxmg.rotate( crater.angle - Math.PI / 2 );
-		game.ctxmg.scale( 1, 1 - ( crater.dist / this.radius ) * 0.9 );	
-		fillCircle( game.ctxmg, 0, 0, crater.radius * 1.05, '#fff' );
-		game.ctxmg.restore();
+		$.ctxmg.save();
+		$.ctxmg.translate( crater.x, crater.y );
+		$.ctxmg.rotate( crater.angle - Math.PI / 2 );
+		$.ctxmg.scale( 1, 1 - ( crater.dist / this.radius ) * 0.9 );	
+		fillCircle( $.ctxmg, 0, 0, crater.radius * 1.05, '#fff' );
+		$.ctxmg.restore();
 
-		game.ctxmg.save();
-		game.ctxmg.translate( crater.x, crater.y );
-		game.ctxmg.rotate( crater.angle - Math.PI / 2 );
-		game.ctxmg.scale( 1, 1 - ( crater.dist / this.radius ) * 0.9 );	
-		fillCircle( game.ctxmg, 0, 0, crater.radius, '#ddd' );
-		game.ctxmg.restore();
+		$.ctxmg.save();
+		$.ctxmg.translate( crater.x, crater.y );
+		$.ctxmg.rotate( crater.angle - Math.PI / 2 );
+		$.ctxmg.scale( 1, 1 - ( crater.dist / this.radius ) * 0.9 );	
+		fillCircle( $.ctxmg, 0, 0, crater.radius, '#ddd' );
+		$.ctxmg.restore();
 	}
 
 	/*==============================================================================
 	Restore
 	==============================================================================*/
-	game.ctxmg.restore();
+	$.ctxmg.restore();
 
 };

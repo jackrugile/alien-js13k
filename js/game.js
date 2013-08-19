@@ -19,15 +19,20 @@ $.init = function() {
 	$.ch = $.cbg.height = $.cmg.height = $.cfg.height = $.cw * $.ratio;
 	$.screen = {};
 	$.gravity = 0.3;
+	$.landOffset = 30;
 	$.dt = 1;
 	$.lt = 0;
 	$.tick = 0;
 	$.state = 'play';
 	$.states = {};
 
+	$.spikes = [];
+
+	$.mousedown = 0;
+
 	$.bindEvents();
 	$.setupStates();
-	$.resize();
+	$.resizecb();
 	$.reset();
 	$.renderBackground();
 	$.loop();
@@ -102,9 +107,28 @@ $.renderForeground = function() {
 }
 
 /*==============================================================================
+Create Spikes
+==============================================================================*/
+$.createSpikes = function() {
+	if( $.tick % 50 == 0 ) {
+		$.spikes.push( new Spike( $ ) );
+	}
+}
+
+/*==============================================================================
+Action All
+==============================================================================*/
+$.actionAll = function( array, action ) {
+	var i = array.length;
+	while( i-- ) {
+		array[ i ][action]( $, i );
+	}
+}
+
+/*==============================================================================
 Events
 ==============================================================================*/
-$.resize = function() {
+$.resizecb = function() {
 	var winWidth = window.innerWidth,
 		winHeight = window.innerHeight;
 	if( winWidth < $.cw || winHeight < $.ch  ) {
@@ -122,15 +146,62 @@ $.resize = function() {
 	$.renderForeground();
 };
 
-$.mousedown = function( e ) {
+$.mousedowncb = function( e ) {
 	e.preventDefault();
-	$.alien.jump();	
+	if( !$.mousedown ){
+		$.alien.jump( $ );
+		$.mousedown = 1;
+	}
 };
 
+$.mouseupcb = function( e ) {
+	e.preventDefault();
+	if( $.mousedown ){
+		$.mousedown = 0;
+	}
+};
+
+$.keydowncb = function( e ) {
+	if( !$.mousedown ){
+		var e = (e.keyCode ? e.keyCode : e.which);
+		/*if(e === 38 || e === 87){up = true;}
+		if(e === 39 || e === 68){right = true;}
+		if(e === 40 || e === 83){down = true;}
+		if(e === 37 || e === 65){left = true;}*/
+		if( e === 38 || e === 87 ) {
+			$.alien.jump( $ );
+			$.mousedown = 1;
+		}
+		/*if( e === 40 || e === 83 ) {
+			$.alien.crouch( $ );
+		}*/
+	}
+}
+
+$.keyupcb = function( e ) {
+	if( $.mousedown ){
+		var e = (e.keyCode ? e.keyCode : e.which);
+		/*if(e === 38 || e === 87){up = true;}
+		if(e === 39 || e === 68){right = true;}
+		if(e === 40 || e === 83){down = true;}
+		if(e === 37 || e === 65){left = true;}*/
+		if( e === 38 || e === 87 ) {
+			//$.alien.jump( $ );
+			$.mousedown = 0;
+		}
+		/*if( e === 40 || e === 83 ) {
+			$.alien.crouch( $ );
+		}*/
+	}
+}
+
 $.bindEvents = function() {
-	window.addEventListener( 'resize', $.resize );
-	window.addEventListener( 'mousedown', $.mousedown );
-	window.addEventListener( 'touchstart', $.mousedown );
+	window.addEventListener( 'resize', $.resizecb );
+	window.addEventListener( 'mousedown', $.mousedowncb );
+	window.addEventListener( 'mouseup', $.mouseupcb );
+	window.addEventListener( 'touchstart', $.mousedowncb );
+	window.addEventListener( 'keydown', $.keydowncb );
+	window.addEventListener( 'keyup', $.keyupcb );
 };
 
 /*==============================================================================
@@ -147,12 +218,12 @@ $.updateDelta = function() {
 
 $.updateScale = function() { 
 	$.scale += ( ( ( 1 - $.alien.distFromGround / 1500 ) - $.scale ) / 15 ) * $.dt ;
-	$.scale = Math.min( Math.max( 0.01, $.scale ), 1.2 );
+	$.scale = Math.min( Math.max( 0.05, $.scale ), 1.2 );
 };
 
 $.updateScreen = function() { 
 	$.screen.x += ( ( ( $.cw * 0.5 ) - $.screen.x ) / 4 ) * $.dt;
-	$.screen.y += ( ( ( ( ( $.alien.dist - ( $.alien.distFromGround * 0.6 ) ) * $.scale) + $.ch * 0.5 ) - $.screen.y ) / 4 ) * $.dt;
+	$.screen.y += ( ( ( ( ( $.alien.dist - ( $.alien.distFromGround * 0.5 ) ) * $.scale) + $.ch * 0.6 ) - $.screen.y ) / 4 ) * $.dt;
 	//var offset = ( $.alien.dist - $.moon.radius - $.alien.radius ) * 0.8;
 	//$.screen.x += ( ( ( $.moon.x + $.cw * 0.5 ) - $.screen.x ) / 10 ) * $.dt;
 	//$.screen.y += ( ( ( $.alien.y + offset - $.ch * 0.7 ) - $.screen.y ) / 10 ) * $.dt;	
@@ -170,15 +241,20 @@ $.setupStates = function() {
 		$.updateScale();
 		$.updateScreen();
 
+		$.createSpikes(); 
+
+		$.moon.update( $ );
+		$.actionAll( $.spikes, 'update' ); 
+		$.alien.update( $ );
+
 		$.ctxmg.clearRect( 0, 0, $.cw, $.ch );
 		$.ctxmg.save();		
 		$.ctxmg.translate( 0, 0 );
 		$.ctxmg.scale( $.scale, $.scale );
 		$.ctxmg.translate( $.screen.x / $.scale, $.screen.y / $.scale );
-
-		$.moon.update( $ );
-		$.alien.update( $ );
+		
 		$.moon.render( $ );
+		$.actionAll( $.spikes, 'render' );  
 		$.alien.render( $ ); 
 		$.ctxmg.restore();
 	};

@@ -2,25 +2,24 @@
 /*var context = new webkitAudioContext(),
 	gainNode = context.createGainNode(),
     instr = context.createOscillator(),
-    noteMap = {
-    	a4: 400,
-    	b4: 493.88,
-    	c5: 523.25,
-    	e5: 659.26
-    },
+    frequencies = [16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87], 
     song = [
-		{ note: 'a4', duration: 30 },
-		{ note: 'b4', duration: 30 },
-		{ note: 'c5', duration: 30 }
+		{ note: 10, octave: 3, duration: 15 },
+		{ note: 0, octave: 4, duration: 15 },
+		{ note: 1, octave: 4, duration: 15 },
+		{ note: 0, octave: 4, duration: 15 }
 	],
     current = 0,
     durationTick = 0;
 
+var frequency = function(note, octave) {
+	return frequencies[note] * Math.pow(2, octave);
+}
  
 gainNode.connect(context.destination);
 gainNode.gain.value = 0.05;  
 instr.connect(gainNode);
-instr.type = 0;
+instr.type = 1;
 instr.noteOn(1);
 
 function play(){
@@ -33,7 +32,7 @@ function play(){
 		current = ( current == song.length - 1 ) ? 0 : current + 1;
 	}
 
-	instr.frequency.value = noteMap[song[current].note];
+	instr.frequency.value = frequency(song[current].note, song[current].octave);
 }
 
 function mute(){
@@ -46,9 +45,8 @@ function unmute(){
 
 window.addEventListener('load', play);
 window.addEventListener('blur', mute);
-window.addEventListener('focus', unmute);*/
-
-//setInterval(function(){oscillator1.frequency.value = 150 + Math.cos(Date.now()/150) * 20;}, 16);
+window.addEventListener('focus', unmute);
+*/
 
 
 
@@ -128,12 +126,10 @@ loopAudio();
 
 
 
-
-
-var context = new webkitAudioContext(),
+window.AudioContext = window.AudioContext||window.webkitAudioContext;
+var context = new AudioContext(),
 	gainNode = context.createGainNode(),
-    instr = context.createOscillator(),
-    channelCount = 4,
+    channelCount = 10,
     channelTick = 0,
     channels = [],
     sounds = [];
@@ -200,14 +196,5 @@ function loopAudio(){
 		sounds[ i ].update( i );
 	}
 }
-
-/*window.addEventListener('click', function(){
-	sounds.push( new Sound({
-		oscType: 1,
-		freqStart: 300,
-		freqEnd: 800,
-		freqChange: 100
-	}));
-});*/
 
 loopAudio();
